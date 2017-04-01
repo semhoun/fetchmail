@@ -1,17 +1,17 @@
-#Roundcube fetchmail plugin
+# Roundcube fetchmail plugin
 
 **Roundcube fetchmail plugin** is a **Roundcube** plugin, which allows users to download their mail from external mailboxes.
 
-##Screenshot
+## Screenshot
 ![Screenshot](http://pf4public.github.io/fetchmail/images/scrn.PNG)
 
-##Prerequisites
+## Prerequisites
 1. **Roundcube**
 2. Database (**PostgreSQL** or **MySQL**)
 3. **fetchmail** itself
 4. **Postfix Admin** provides convenient `fetchmail.pl` script
 
-##Installation
+## Installation
 1. First you need to install **fetchmail** itself. For **Debian** you can do so by `sudo apt-get install fetchmail`
 2. Next you should extract **Roundcube fetchmail plugin** archive into your **Roundcube** `plugins` folder creating "fetchmail" folder there.
   * You can do so either by using `composer` for which there is `composer.json`, still you need to follow further installation steps since those could not be accomplished with `composer`
@@ -45,27 +45,27 @@ Appending `, 'fetchmail'` to the list of plugins will suffice.
 9. You might also need to install `liblockfile-simple-perl` and ( `libsys-syslog-perl` or `libunix-syslog-perl` ) on **Debian**-based systems.
 10. Lastly there might be need to do `sudo mkdir /var/run/fetchmail; sudo chown mail:mail /var/run/fetchmail`
 
-##Settings
+## Settings
 In case you need to edit default-set settings, you may copy `config.inc.php.dist` to `config.inc.php` and edit setings as desired in the latter file, which will override defaults.
 * `$rcmail_config ['fetchmail_limit']` limits the number of external mailboxes per user allowed. Default is `10`.
 * `$rcmail_config ['fetchmail_folder']` whether to allow users to specify IMAP folder they wish to download mail from. Default is `false`.
 * `$rcmail_config ['fetchmail_mda']` allows you to specify mda field for fetchmail. This could be useful in case you want to deliver downloaded mail via MDA or LDA directly, rather than forwarding via SMTP or LMTP. For more information please refer to [fetchmail manual](http://www.fetchmail.info/fetchmail-man.html) and [fetchmail.pl](https://sourceforge.net/p/postfixadmin/code/HEAD/tree/trunk/ADDITIONS/fetchmail.pl) script. Default is `''`, i.e. not used.
 
-##License
+## License
 This software distributed under the terms of the GNU General Public License as published by the Free Software Foundation
 
 Further details on the GPL license can be found at http://www.gnu.org/licenses/gpl.html
 
 By contributing to **Roundcube fetchmail plugin**, authors release their contributed work under this license
 
-##Acknowledgements
-###Original author
+## Acknowledgements
+### Original author
 
 Arthur Mayer, https://github.com/flames
 
-###List of contributors
+### List of contributors
 
 For a complete list of contributors, refer to [Github project contributors page](https://github.com/PF4Public/fetchmail/graphs/contributors)
 
-####Currently maintained by
+#### Currently maintained by
 * [PF4Public](https://github.com/PF4Public)
