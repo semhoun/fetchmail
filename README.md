@@ -12,6 +12,8 @@
 4. **Postfix Admin** provides convenient `fetchmail.pl` script
 
 ## Installation
+Please follow these steps and adapt them to your distribution if necessary
+
 1. First you need to install **fetchmail** itself. For **Debian** you can do so by `sudo apt-get install fetchmail`
 2. Next you should extract **Roundcube fetchmail plugin** archive into your **Roundcube** `plugins` folder creating "fetchmail" folder there.
   * You can do so either by using `composer` for which there is `composer.json`, still you need to follow further installation steps since those could not be accomplished with `composer`
@@ -26,8 +28,8 @@
 Appending `, 'fetchmail'` to the list of plugins will suffice.
 
 4. Unless default settings are suitable for you, you need to configure the plugin. See the [settings section](#settings) for more information.
-5. You need to create additional table in your database using one of the supplied `.sql` files. Another possibility is to use **Postfix Admin** table if you have it installed. If using **PostgreSQL** you may use schemas to share `fetchmail` table between **Roundcube** and **Postfix Admin**. Namely creating it in `public` schema, whereas every other table in it's appropriate schema, like `roundcube` and `postfixadmin`. Please refer to [the documentation](http://www.postgresql.org/docs/current/static/ddl-schemas.html) for more information.
-6. You will need `fetchmail.pl` script from **Postfix Admin** distribution. If you don't have **Postfix Admin** installed, you can obtain required `fetchmail.pl` script from their repo  [trunk / ADDITIONS / fetchmail.pl](https://sourceforge.net/p/postfixadmin/code/HEAD/tree/trunk/ADDITIONS/fetchmail.pl). But be sure to get at least revision [[r1766]](https://sourceforge.net/p/postfixadmin/code/1766/), at which proper handling of `active` field introduced. Place it to where apropriate. For example, where your mailboxes are, e.g. `/var/mail`.
+5. You need to create additional table in your database using one of the supplied `.sql` files. Another possibility is to use **Postfix Admin** table if you have it installed. If using **PostgreSQL** you may use schemas to share `fetchmail` table between **Roundcube** and **Postfix Admin**. Namely creating it in `public` schema, whereas every other table in it's appropriate schema, like `roundcube` and `postfixadmin`. Please refer to [the documentation](https://www.postgresql.org/docs/current/static/ddl-schemas.html) for more information.
+6. You will need `fetchmail.pl` script from **Postfix Admin** distribution. If you don't have **Postfix Admin** installed, you can obtain required `fetchmail.pl` script from their repo  [postfixadmin / ADDITIONS / fetchmail.pl](https://github.com/postfixadmin/postfixadmin/blob/master/ADDITIONS/fetchmail.pl). But be sure to get at least revision [8bad929](https://github.com/postfixadmin/postfixadmin/blob/8bad929a4490f93587ceb00b5931405586b5cc04/ADDITIONS/fetchmail.pl), at which proper handling of `active` field introduced. Place it to where apropriate. For example, where your mailboxes are, e.g. `/var/mail`.
 7. Next adapt `fetchmail.pl` to your config. Most likely you want to change these settings:
 
 	```perl
