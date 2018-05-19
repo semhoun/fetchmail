@@ -14,7 +14,7 @@
 ## Installation
 Please follow these steps and adapt them to your distribution if necessary
 
-1. First you need to install **fetchmail** itself. For **Debian** you can do so by `sudo apt-get install fetchmail`
+1. First you need to install **fetchmail** itself. For **Debian** you can do so by `apt install fetchmail`
 2. Next you should extract **Roundcube fetchmail plugin** archive into your **Roundcube** `plugins` folder creating "fetchmail" folder there.
   * You can do so either by using `composer` for which there is `composer.json`, still you need to follow further installation steps since those could not be accomplished with `composer`
   * Alternatively you can download needed release from [Releases page](https://github.com/PF4Public/fetchmail/releases) unpacking it accordingly
@@ -46,9 +46,11 @@ Appending `, 'fetchmail'` to the list of plugins will suffice.
 	# database password
 	our $db_password="CHANGE_ME!";
 	```
-8. Next step is to configure **cron** for regular mail checking with `sudo crontab -u mail -e`. For example for 5 minute intervals add this: `*/5 * * * * /var/mail/fetchmail.pl >/dev/null`. Worth noting that even if you configure cron for a 5 minutes interval, fetchmail will still abide user configured checking interval. As a result setting bigger intervals here manifests them as intervals available to fetchmail, that is setting `0 * * * *` here overrides any user setting wich is less then hour
+8. Next step is to configure **cron** for regular mail checking with `crontab -u mail -e`. For example for 5 minute intervals add this: `*/5 * * * * /var/mail/fetchmail.pl >/dev/null`. Worth noting that even if you configure cron for a 5 minutes interval, fetchmail will still abide user configured checking interval. As a result setting bigger intervals here manifests them as intervals available to fetchmail, that is setting `0 * * * *` here overrides any user setting wich is less then hour
 9. You might also need to install `liblockfile-simple-perl` and ( `libsys-syslog-perl` or `libunix-syslog-perl` ) on **Debian**-based systems.
-10. Lastly there might be need to do `sudo mkdir /var/run/fetchmail; sudo chown mail:mail /var/run/fetchmail`
+10. Lastly there might be need to do `mkdir /var/run/fetchmail; chown mail:mail /var/run/fetchmail`
+
+Please note that some commands might require superuser permissions
 
 ## Settings
 In case you need to edit default-set settings, you may copy `config.inc.php.dist` to `config.inc.php` and edit setings as desired in the latter file, which will override defaults.
