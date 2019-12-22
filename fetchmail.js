@@ -14,73 +14,73 @@ function fetchmail_edit(id) {
 function row_del(id) {
 	if (id == "") {
 		parent.rcmail.display_message(rcmail.gettext('textempty', 'fetchmail'),
-				'error');
+			'error');
 	} else {
 		document.getElementById('fetch-table').deleteRow(
-				document.getElementById('fetch_' + id).rowIndex);
+			document.getElementById('fetch_' + id).rowIndex);
 		rcmail.http_request('plugin.fetchmail.del', '_id=' + id, true);
 		if (document.getElementById('fetch-table')
-				.getElementsByTagName("TBODY").item(0).rows.length == 0) {
+			.getElementsByTagName("TBODY").item(0).rows.length == 0) {
 			var tbody = document.getElementById('fetch-table')
-					.getElementsByTagName("TBODY").item(0);
+				.getElementsByTagName("TBODY").item(0);
 			var row = document.createElement("TR");
 			var cell = document.createElement("TD");
 			var text = document.createTextNode(rcmail.gettext('nofetch',
-					'fetchmail'));
+				'fetchmail'));
 			cell.setAttribute('colspan', '4');
 			cell.appendChild(text);
 			row.appendChild(cell);
 			tbody.appendChild(row);
 		}
 		$('#fetchmail_items_number').text(
-				$('#fetchmail_items_number').text() - 1);
+			$('#fetchmail_items_number').text() - 1);
 		parent.rcmail.display_message(rcmail.gettext('successfullydeleted',
-				'fetchmail'), 'confirmation');
+			'fetchmail'), 'confirmation');
 	}
 }
 function row_edit(id, active) {
 	if (id == "") {
 		parent.rcmail.display_message(rcmail.gettext('textempty', 'fetchmail'),
-				'error');
+			'error');
 	} else {
 		if (active == 1) {
 			var active = 0;
 			document.getElementById('td_' + id).setAttribute('onclick',
-					'row_edit(' + id + ',' + active + ');');
+				'row_edit(' + id + ',' + active + ');');
 			document.getElementById('img_' + id).src = 'plugins/fetchmail/skins/default/disabled.png';
 			rcmail.http_request('plugin.fetchmail.disable', '_id=' + id, true);
 			parent.rcmail.display_message(rcmail.gettext(
-					'successfullydisabled', 'fetchmail'), 'confirmation');
+				'successfullydisabled', 'fetchmail'), 'confirmation');
 		} else {
 			var active = 1;
 			document.getElementById('td_' + id).setAttribute('onclick',
-					'row_edit(' + id + ',' + active + ');');
+				'row_edit(' + id + ',' + active + ');');
 			document.getElementById('img_' + id).src = 'plugins/fetchmail/skins/default/enabled.png';
 			rcmail.http_request('plugin.fetchmail.enable', '_id=' + id, true);
 			parent.rcmail.display_message(rcmail.gettext('successfullyenabled',
-					'fetchmail'), 'confirmation');
+				'fetchmail'), 'confirmation');
 		}
 	}
 }
 function fetchmail_toggle_folder() {
 	switch ($('#fetchmailprotocol').val()) {
-	case "IMAP":
-		$("#fetchmail_folder_display").show()
-		break;
-	default:
-		$("#fetchmail_folder_display").hide()
+		case "IMAP":
+			$("#fetchmail_folder_display").show()
+			break;
+		default:
+			$("#fetchmail_folder_display").hide()
 	}
 }
 if (window.rcmail) {
-	rcmail.addEventListener('init', function(evt) {
-		rcmail.register_command('plugin.fetchmail.save', function() {
+	rcmail.addEventListener('init', function (evt) {
+		rcmail.register_command('plugin.fetchmail.save', function () {
 			var input_server = rcube_find_object('_fetchmailserver');
 			var input_user = rcube_find_object('_fetchmailuser');
 			var input_pass = rcube_find_object('_fetchmailpass');
 			if (input_server.value == "" || input_user.value == ""
-					|| input_pass.value == "") {
+				|| input_pass.value == "") {
 				parent.rcmail.display_message(rcmail.gettext('textempty',
-						'fetchmail'), 'error');
+					'fetchmail'), 'error');
 			} else {
 				document.forms.fetchmailform.submit();
 			}

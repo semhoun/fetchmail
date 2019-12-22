@@ -1,5 +1,5 @@
 <?php
-//Anyone fluent in German feel free to review this file
+
 $labels = array();
 $labels['fetchmail'] = 'Fetchmail';
 $labels['fetchmaildelete'] = 'Nach dem Abruf E-Mails löschen';
@@ -26,5 +26,3 @@ $messages['successfullydisabled'] = 'Erfolgreich deaktiviert!';
 $messages['successfullyenabled'] = 'Erfolgreich aktiviert!';
 $messages['successfullysaved'] = 'Erfolgreich gespeichert!';
 $messages['textempty'] = 'Einige Felder sind leer';
-
-?>

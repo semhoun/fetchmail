@@ -26,5 +26,3 @@ $messages['successfullydisabled'] = 'Désactivé avec succès!';
 $messages['successfullyenabled'] = 'Activé avec succès!';
 $messages['successfullysaved'] = 'Enregistré avec succès!';
 $messages['textempty'] = 'Un ou plusieurs champs sont vides';
-
-?>

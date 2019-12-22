@@ -1,12 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<title><roundcube:object name="pagetitle" /></title>
-<roundcube:include file="/includes/links.html" />
-<link rel="stylesheet" type="text/css" href="/settings.css" />
-<link rel="stylesheet" type="text/css" href="/this/fetchmail.css" />
-<script type="text/javascript" src="/functions.js"></script>
+	<title>
+		<roundcube:object name="pagetitle" />
+	</title>
+	<roundcube:include file="/includes/links.html" />
+	<link rel="stylesheet" type="text/css" href="/settings.css" />
+	<link rel="stylesheet" type="text/css" href="/this/fetchmail.css" />
+	<script type="text/javascript" src="/functions.js"></script>
 </head>
+
 <body>
 
 	<roundcube:include file="/includes/taskbar.html" />
@@ -17,28 +22,24 @@
 		<div id="myprefs">
 
 			<div id="myform">
-				<form name="fetchmailform"
-					action="./?_task=settings&_action=plugin.fetchmail.save"
-					method="post">
+				<form name="fetchmailform" action="./?_task=settings&_action=plugin.fetchmail.save" method="post">
 					<roundcube:object name="plugin.fetchmail_form" />
 				</form>
 			</div>
 
 			<div id="mybuttons">
-				<roundcube:button command="plugin.fetchmail.save" type="input"
-					class="button mainaction" label="save" />
-				<roundcube:button command="plugin.fetchmail" type="input"
-					class="button mainaction" label="cancel" />
+				<roundcube:button command="plugin.fetchmail.save" type="input" class="button mainaction" label="save" />
+				<roundcube:button command="plugin.fetchmail" type="input" class="button mainaction" label="cancel" />
 			</div>
 
 			<div id="mytable">
-				<roundcube:object name="plugin.fetchmail_table" class="fetchmail-table"
-					cellspacing="0" deleteIcon="/this/delete.png"
-					enableIcon="/this/enabled.png" disableIcon="/this/disabled.png" />
+				<roundcube:object name="plugin.fetchmail_table" class="fetchmail-table" cellspacing="0"
+					deleteIcon="/this/delete.png" enableIcon="/this/enabled.png" disableIcon="/this/disabled.png" />
 			</div>
 
 		</div>
 	</div>
 
 </body>
+
 </html>
