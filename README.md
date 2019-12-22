@@ -3,7 +3,7 @@
 **Roundcube fetchmail plugin** is a **Roundcube** plugin, which allows users to download their mail from external mailboxes.
 
 ## Screenshot
-![Screenshot](http://pf4public.github.io/fetchmail/images/scrn.PNG)
+![Screenshot](https://pf4public.github.io/fetchmail/images/scrn.PNG)
 
 ## Prerequisites
 1. **Roundcube**
@@ -46,6 +46,7 @@ Appending `, 'fetchmail'` to the list of plugins will suffice.
 	# database password
 	our $db_password="CHANGE_ME!";
 	```
+	Instead of changing this script, you may put your settings into `/etc/mail/postfixadmin/fetchmail.conf`
 8. Next step is to configure **cron** for regular mail checking with `crontab -u mail -e`. For example for 5 minute intervals add this: `*/5 * * * * /var/mail/fetchmail.pl >/dev/null`. Worth noting that even if you configure cron for a 5 minutes interval, fetchmail will still abide user configured checking interval. As a result setting bigger intervals here manifests them as intervals available to fetchmail, that is setting `0 * * * *` here overrides any user setting wich is less then hour
 9. You might also need to install `liblockfile-simple-perl` and ( `libsys-syslog-perl` or `libunix-syslog-perl` ) on **Debian**-based systems.
 10. Lastly there might be need to do `mkdir /var/run/fetchmail; chown mail:mail /var/run/fetchmail`
@@ -56,7 +57,7 @@ Please note that some commands might require superuser permissions
 In case you need to edit default-set settings, you may copy `config.inc.php.dist` to `config.inc.php` and edit setings as desired in the latter file, which will override defaults.
 * `$rcmail_config ['fetchmail_limit']` limits the number of external mailboxes per user allowed. Default is `10`.
 * `$rcmail_config ['fetchmail_folder']` whether to allow users to specify IMAP folder they wish to download mail from. Default is `false`.
-* `$rcmail_config ['fetchmail_mda']` allows you to specify mda field for fetchmail. This could be useful in case you want to deliver downloaded mail via MDA or LDA directly, rather than forwarding via SMTP or LMTP. For more information please refer to [fetchmail manual](http://www.fetchmail.info/fetchmail-man.html) and [fetchmail.pl](https://sourceforge.net/p/postfixadmin/code/HEAD/tree/trunk/ADDITIONS/fetchmail.pl) script. Default is `''`, i.e. not used.
+* `$rcmail_config ['fetchmail_mda']` allows you to specify mda field for fetchmail. This could be useful in case you want to deliver downloaded mail via MDA or LDA directly, rather than forwarding via SMTP or LMTP. For more information please refer to [fetchmail manual](http://www.fetchmail.info/fetchmail-man.html) and [fetchmail.pl](https://github.com/postfixadmin/postfixadmin/blob/master/ADDITIONS/fetchmail.pl) script. Default is `''`, i.e. not used.
 
 ## License
 This software distributed under the terms of the GNU General Public License as published by the Free Software Foundation
