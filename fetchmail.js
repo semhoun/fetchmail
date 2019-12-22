@@ -71,6 +71,9 @@ function fetchmail_toggle_folder() {
 			$("#fetchmail_folder_display").hide()
 	}
 }
+function fetchmail_callback_function() {
+	window.location.reload();
+}
 if (window.rcmail) {
 	rcmail.addEventListener('init', function (evt) {
 		rcmail.register_command('plugin.fetchmail.save', function () {
@@ -82,9 +85,12 @@ if (window.rcmail) {
 				parent.rcmail.display_message(rcmail.gettext('textempty',
 					'fetchmail'), 'error');
 			} else {
-				document.forms.fetchmailform.submit();
+				//document.forms.fetchmailform.submit();
+				var settings = $('form[name*="fetchmailform"]').serialize();
+				rcmail.http_post('plugin.fetchmail.save', settings);
 			}
 		}, true);
 
 	})
+	rcmail.addEventListener('plugin.fetchmailcallback', fetchmail_callback_function);
 }
