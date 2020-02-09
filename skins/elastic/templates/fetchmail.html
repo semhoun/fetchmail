@@ -1,0 +1,34 @@
+<roundcube:include file="includes/layout.html" />
+<roundcube:include file="includes/menu.html" />
+<roundcube:include file="includes/settings-menu.html" />
+
+
+<h1 class="voice"><roundcube:label name="settings" /> : <roundcube:label name="fetchmail.settings" /></h1>
+
+<div id="layout-content">
+	<div class="header">
+	</div>
+
+	<div class="formcontainer">
+		<div id="pluginbody" class="formcontent">
+			<form name="fetchmailform" class="propform" action="./?_task=settings&_action=plugin.fetchmail.save" method="post">
+				<roundcube:object name="plugin.fetchmail_form" />
+
+				<div>
+					<roundcube:button command="plugin.fetchmail.save" type="input" class="button mainaction submit btn btn-primary" label="save" />
+					<roundcube:button command="plugin.fetchmail" type="input" class="button mainaction submit btn btn-primary" label="cancel" />
+				</div>
+
+				<div>
+					<roundcube:object name="plugin.fetchmail_table" class="fetchmail-table" cellspacing="0" 
+							deleteIcon="/this/delete.png" enableIcon="/this/enabled.png" disableIcon="/this/disabled.png" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>
+
+<roundcube:include file="includes/footer.html" />
+
+

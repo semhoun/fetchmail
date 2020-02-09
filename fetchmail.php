@@ -327,7 +327,7 @@
          $out .= '<br />' . "\n";
          $fetch_table = new html_table(array(
                 'id' => 'fetch-table',
-                'class' => 'records-table',
+                'class' => 'records-table listing',
                 'cellspacing' => '0',
                 'cols' => ($this->show_folder) ? 5 : 4
         ));
