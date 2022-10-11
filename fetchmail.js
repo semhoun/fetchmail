@@ -7,90 +7,102 @@
  * By contributing authors release their contributed work under this license 
  * For more information see README.md file
  ******************************************************************************/
-
-function fetchmail_edit(id) {
-	window.location.href = '?_task=settings&_action=plugin.fetchmail&_id=' + id;
-}
-function row_del(id) {
-	if (id == "") {
-		parent.rcmail.display_message(rcmail.gettext('textempty', 'fetchmail'),
-			'error');
-	} else {
-		document.getElementById('fetch-table').deleteRow(
-			document.getElementById('fetch_' + id).rowIndex);
-		rcmail.http_request('plugin.fetchmail.del', '_id=' + id, true);
-		if (document.getElementById('fetch-table')
-			.getElementsByTagName("TBODY").item(0).rows.length == 0) {
-			var tbody = document.getElementById('fetch-table')
-				.getElementsByTagName("TBODY").item(0);
-			var row = document.createElement("TR");
-			var cell = document.createElement("TD");
-			var text = document.createTextNode(rcmail.gettext('nofetch',
-				'fetchmail'));
-			cell.setAttribute('colspan', '4');
-			cell.appendChild(text);
-			row.appendChild(cell);
-			tbody.appendChild(row);
-		}
-		$('#fetchmail_items_number').text(
-			$('#fetchmail_items_number').text() - 1);
-		parent.rcmail.display_message(rcmail.gettext('successfullydeleted',
-			'fetchmail'), 'confirmation');
-	}
-}
-function row_edit(id, active) {
-	if (id == "") {
-		parent.rcmail.display_message(rcmail.gettext('textempty', 'fetchmail'),
-			'error');
-	} else {
-		if (active == 1) {
-			var active = 0;
-			document.getElementById('td_' + id).setAttribute('onclick',
-				'row_edit(' + id + ',' + active + ');');
-			document.getElementById('img_' + id).src = 'plugins/fetchmail/skins/default/disabled.png';
-			rcmail.http_request('plugin.fetchmail.disable', '_id=' + id, true);
-			parent.rcmail.display_message(rcmail.gettext(
-				'successfullydisabled', 'fetchmail'), 'confirmation');
-		} else {
-			var active = 1;
-			document.getElementById('td_' + id).setAttribute('onclick',
-				'row_edit(' + id + ',' + active + ');');
-			document.getElementById('img_' + id).src = 'plugins/fetchmail/skins/default/enabled.png';
-			rcmail.http_request('plugin.fetchmail.enable', '_id=' + id, true);
-			parent.rcmail.display_message(rcmail.gettext('successfullyenabled',
-				'fetchmail'), 'confirmation');
-		}
-	}
-}
 function fetchmail_toggle_folder() {
-	switch ($('#fetchmailprotocol').val()) {
-		case "IMAP":
-			$("#fetchmail_folder_display").show()
-			break;
-		default:
-			$("#fetchmail_folder_display").hide()
-	}
+   switch ($('#fetchmailprotocol').val()) {
+       case "IMAP":
+           $("#fetchmail_folder_display").show();
+           break;
+       default:
+	       $("#fetchmail_folder_display").hide();
+   }
 }
-function fetchmail_callback_function() {
-	window.location.reload();
-}
+
 if (window.rcmail) {
 	rcmail.addEventListener('init', function (evt) {
-		rcmail.register_command('plugin.fetchmail.save', function () {
-			var input_server = rcube_find_object('_fetchmailserver');
-			var input_user = rcube_find_object('_fetchmailuser');
-			var input_pass = rcube_find_object('_fetchmailpass');
-			if (input_server.value == "" || input_user.value == ""
-				|| input_pass.value == "") {
-				parent.rcmail.display_message(rcmail.gettext('textempty',
-					'fetchmail'), 'error');
-			} else {
-				//document.forms.fetchmailform.submit();
-				var settings = $('form[name*="fetchmailform"]').serialize();
-				rcmail.http_post('plugin.fetchmail.save', settings);
+		if (rcmail.env.action == 'plugin.fetchmail') {
+			rcmail.section_select = function(list) {
+				var win, id = list.get_single_selection();
+	
+				if (id && (win = this.get_frame_window(this.env.contentframe))) {
+					this.location_href({_action: 'plugin.fetchmail.edit', _id: id, _framed: 1}, win, true);
+				}
+				this.enable_command('fetchmail.delete', true);
 			}
-		}, true);
+		    
+			rcmail.register_command('fetchmail.delete', function() {
+				var id = rcmail.sections_list.get_single_selection();
+				rcmail.confirm_dialog(rcmail.get_label('fetchmail.fetchmaildelconfirm'), 'delete', function(e, ref) {
+					var post = '_act=delete&_id=' + ref.sections_list.rows[id].uid,
+					lock = ref.set_busy(true, 'loading');
 
-	})
-	rcmail.addEventListener('plugin.fetchmailcallback', fetchmail_callback_function);
+					ref.http_post('plugin.fetchmail.delete', post, lock);
+				});
+			});
+			rcmail.register_command('fetchmail.add', function() {
+				if ((win = rcmail.get_frame_window(rcmail.env.contentframe))) {
+					rcmail.location_href({_action: 'plugin.fetchmail.edit', _id: '', _framed: 1}, win, true);
+				}
+				rcmail.enable_command('fetchmail.delete', false);
+			}, true);
+			
+			if(rcmail.sections_list.rowcount < rcmail.env.fetchmail_limit) {
+		    	rcmail.enable_command('fetchmail.add', true);
+		    } else {
+		    	rcmail.enable_command('fetchmail.add', false);
+		    }
+
+		}
+		if(rcmail.env.action == 'plugin.fetchmail.edit') {
+			rcmail.register_command('fetchmail.save', function() {
+				fields = ['fetchmailserver', 'fetchmailuser', 'fetchmailpass'];
+				for(i=0;i<fields.length;i++) {
+					var elem = document.getElementById(fields[i]);
+					elem.value.length ? elem.classList.remove('is-invalid') : elem.classList.add('is-invalid');
+				}
+				if(document.getElementsByClassName('is-invalid').length > 0) {
+				    rcmail.display_message(rcmail.gettext('textempty','fetchmail'), 'error');
+				} else {
+		            var settings = $('form[name*="fetchmailform"]').serialize();
+					lock = rcmail.set_busy(true, 'loading');
+		            rcmail.http_post('plugin.fetchmail.save', settings, lock);
+		        }
+			});
+		}
+	});
+	rcmail.addEventListener('plugin.fetchmail.save.callback', function(e) {
+		if(e.message == "done") {
+			var rowid = "rcmrow"+e.id;
+			if(parent.window.document.getElementById(rowid)) {
+				parent.window.document.getElementById(rowid).getElementsByTagName('td')[0].innerText = e.title;
+			} else {
+				parent.window.rcmail.sections_list.insert_row({id:rowid,uid:e.id,className:"fetchmail-account",cols:[{className:"section",innerHTML:e.title}]});
+		        parent.window.rcmail.sections_list.select_row(e.id);
+			}
+		    rcmail.display_message(rcmail.gettext('successfullysaved','fetchmail'), 'confirmation');
+		    if(parent.window.rcmail.sections_list.rowcount < parent.window.rcmail.env.fetchmail_limit) {
+		    	parent.window.rcmail.enable_command('fetchmail.add', true);
+		    } else {
+		    	parent.window.rcmail.enable_command('fetchmail.add', false);
+		    }
+		    parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = parent.window.rcmail.sections_list.rowcount+"/"+parent.window.rcmail.env.fetchmail_limit;
+			parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('value')[0].setAttribute("style","width:"+((parent.window.rcmail.sections_list.rowcount/parent.window.rcmail.env.fetchmail_limit)*100)+"%");
+
+		}
+	});
+	rcmail.addEventListener('plugin.fetchmail.delete.callback', function(e) {
+		if(e.message == "done") {
+			rcmail.sections_list.remove_row(e.id);
+			if ((win = rcmail.get_frame_window(rcmail.env.contentframe))) {
+				win.location.href = rcmail.env.blankpage;
+			}
+			rcmail.display_message(rcmail.gettext('successfullydeleted','fetchmail'), 'confirmation');
+			rcmail.enable_command('fetchmail.add', true);
+			rcmail.enable_command('fetchmail.delete', false);
+			document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = rcmail.sections_list.rowcount+"/"+rcmail.env.fetchmail_limit;
+			document.getElementById('fetchmail-quota').getElementsByClassName('value')[0].setAttribute("style","width:"+((rcmail.sections_list.rowcount/rcmail.env.fetchmail_limit)*100)+"%");
+		}
+	});
+
 }
+
+

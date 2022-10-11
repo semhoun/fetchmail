@@ -1,0 +1,11 @@
+.listing.iconized li.fetchmail > a::before {
+	content: "\f674";
+}
+
+.action-plugin-fetchmail .quota-widget::before {
+	content: "\f674";
+}
+
+.action-plugin-fetchmail .listing.iconized tr td.section::before {
+    content: "\f01c";
+}

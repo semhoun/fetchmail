@@ -3,32 +3,43 @@
 <roundcube:include file="includes/settings-menu.html" />
 
 
-<h1 class="voice"><roundcube:label name="settings" /> : <roundcube:label name="fetchmail.settings" /></h1>
+<h1 class="voice"><roundcube:label name="settings" /> : <roundcube:label name="fetchmail.fetchmail" /></h1>
 
-<div id="layout-content">
+<!-- remote mailbox list -->
+<div id="layout-list" class="listbox selected" aria-labelledby="aria-label-fetchmaillist">
 	<div class="header">
+		<a class="button icon back-sidebar-button" href="#sidebar"><span class="inner"><roundcube:label name="settings" /></span></a>
+		<span id="aria-label-fetchmaillist" class="header-title"><roundcube:label name="fetchmail.fetchmail" /></span>
+		<a class="button icon toolbar-menu-button" href="#list-menu"><span class="inner"><roundcube:label name="menu" /></span></a>
 	</div>
+	<div class="scroller">
+		<roundcube:object name="sectionslist" id="sections-table" class="listing iconized"
+			noheader="true" role="listbox" data-list="sections_list"
+			data-label-msg="listempty" data-label-ext="listusebutton" data-create-command="add"/>
+	</div>
+	<div class="footer small">
+		<roundcube:object name="fetchmail.quota" id="fetchmail-quota" />
+	</div>
+</div>
 
-	<div class="formcontainer">
-		<div id="pluginbody" class="formcontent">
-			<form name="fetchmailform" class="propform" action="./?_task=settings&_action=plugin.fetchmail.save" method="post">
-				<roundcube:object name="plugin.fetchmail_form" />
-
-				<div>
-					<roundcube:button command="plugin.fetchmail.save" type="input" class="button mainaction submit btn btn-primary" label="save" />
-					<roundcube:button command="plugin.fetchmail" type="input" class="button mainaction submit btn btn-primary" label="cancel" />
-				</div>
-
-				<div>
-					<roundcube:object name="plugin.fetchmail_table" class="fetchmail-table" cellspacing="0" 
-							deleteIcon="/this/delete.png" enableIcon="/this/enabled.png" disableIcon="/this/disabled.png" />
-				</div>
-			</form>
+<!-- remote mailbox settings -->
+<div id="layout-content" role="main">
+	<h2 id="aria-label-toolbar" class="voice"><roundcube:label name="arialabeltoolbar" /></h2>
+	<div class="header" role="toolbar" aria-labelledby="aria-label-toolbar">
+		<a class="button icon back-list-button" href="#back"><span class="inner"><roundcube:label name="back" /></span></a>
+		<span class="header-title"></span>
+		<!-- toolbar -->
+		<div id="fetchmailtoolbar" class="toolbar menu">
+			<roundcube:button command="fetchmail.add" type="link" class="create disabled" classAct="create"
+				label="create" title="create" innerClass="inner" 
+				data-fab="true" />
+			<roundcube:button command="fetchmail.delete" type="link" class="delete disabled" classAct="delete"
+				label="delete" title="delete" innerClass="inner" />
 		</div>
 	</div>
-
+	<div class="iframe-wrapper">
+		<roundcube:object name="contentframe" id="preferences-frame" src="env:blankpage" title="arialabelidentityeditfrom" />
+	</div>
 </div>
 
 <roundcube:include file="includes/footer.html" />
-
-

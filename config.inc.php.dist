@@ -1,5 +1,13 @@
 <?php
 
+// ----------------------------------
+// SQL DATABASE
+// ----------------------------------
+// Similar to the $config['db_dsnw'] config variable, this is a
+// database connection string (DSN) for read operations.
+// For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+$config['fetchmail_db_dsnr'] = $config['db_dsnw'];
+
 // max external accounts to fetch per mailbox
 $rcmail_config ['fetchmail_limit'] = 10;
 
