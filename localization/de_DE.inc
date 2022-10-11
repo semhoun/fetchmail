@@ -1,7 +1,7 @@
 <?php
 
 $labels = array();
-$labels['fetchmail'] = 'Fetchmail';
+$labels['fetchmail'] = 'E-Mail Abruf';
 $labels['fetchmaildelete'] = 'Nach dem Abruf E-Mails löschen';
 $labels['fetchmailenabled'] = 'Aktiv';
 $labels['fetchmailfetchall'] = 'Alle E-Mails abrufen';

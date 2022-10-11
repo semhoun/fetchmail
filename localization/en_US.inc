@@ -1,7 +1,7 @@
 <?php
 
 $labels = array();
-$labels['fetchmail'] = 'Fetchmail';
+$labels['fetchmail'] = 'Fetch Email';
 $labels['fetchmaildelete'] = 'Delete emails after receiving';
 $labels['fetchmailenabled'] = 'Enable';
 $labels['fetchmailfetchall'] = 'Fetch all e-mails from server';

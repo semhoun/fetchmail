@@ -1,7 +1,7 @@
 <?php
 
 $labels = array();
-$labels['fetchmail'] = 'Fetchmail';
+$labels['fetchmail'] = 'Сбор почты';
 $labels['fetchmaildelete'] = 'Удалить сообщения после загрузки';
 $labels['fetchmailenabled'] = 'Включить';
 $labels['fetchmailfetchall'] = 'Загружать все сообщения с сервера';
