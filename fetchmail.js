@@ -67,6 +67,7 @@ if (window.rcmail) {
 		            rcmail.http_post('plugin.fetchmail.save', settings, lock);
 		        }
 			});
+			rcmail.enable_command('fetchmail.save', true);
 		}
 	});
 	rcmail.addEventListener('plugin.fetchmail.save.callback', function(e) {
