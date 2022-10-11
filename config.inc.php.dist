@@ -4,7 +4,8 @@
 // SQL DATABASE
 // ----------------------------------
 // Similar to the $config['db_dsnw'] config variable, this is a
-// database connection string (DSN) for read operations.
+// database connection string (DSN) for for a fetchmail table
+// outside the Roundcube Database, e.g. an existing Postfix Admin Database.
 // For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
 $config['fetchmail_db_dsnr'] = $config['db_dsnw'];
 
