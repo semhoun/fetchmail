@@ -26,3 +26,4 @@ $messages['successfullydisabled'] = 'Zdezaktywowano pomyślnie!';
 $messages['successfullyenabled'] = 'Aktywowano pomyślnie!';
 $messages['successfullysaved'] = 'Zapisano pomyślnie!';
 $messages['textempty'] = 'Wymagane pola są puste';
+$messages['invaliddomain'] = 'Nieprawidłowa domena $s, nie wykrywana w DNS';

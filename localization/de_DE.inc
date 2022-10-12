@@ -26,3 +26,4 @@ $messages['successfullydisabled'] = 'Erfolgreich deaktiviert!';
 $messages['successfullyenabled'] = 'Erfolgreich aktiviert!';
 $messages['successfullysaved'] = 'Erfolgreich gespeichert!';
 $messages['textempty'] = 'Einige Felder sind leer';
+$messages['invaliddomain'] = 'Ungültige Domain $s - nicht per DNS auflösbar';

@@ -58,7 +58,7 @@ class fetchmail extends rcube_plugin
             $sql = "DELETE FROM fetchmail WHERE id = '$id'";
             $delete = $this->db->query($sql);
             rcmail::get_instance()->output->command('plugin.fetchmail.delete.callback', array(
-		        'message' => 'done',
+		        'result' => 'done',
 		        'id' => $id
 		    ));
         }
@@ -133,6 +133,16 @@ class fetchmail extends rcube_plugin
             $fetchall = 1;
         }
         $mda = $this->rc->config->get('fetchmail_mda');
+        
+        //Validate server
+        $server_valid = $this->_check_server($server);
+        if(!$server_valid) {
+        	rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
+	            'result' => 'dnserror',
+	            'message' => $this->gettext(['name' => 'invaliddomain', 'vars' => ['s' => $server]])
+	        ));
+	        return;
+        }
         if ($newentry or $id == '')
         {
             $sql = "SELECT * FROM fetchmail WHERE mailbox='" . $mailbox . "'";
@@ -141,19 +151,18 @@ class fetchmail extends rcube_plugin
             $num_rows = $this->db->num_rows($result);
             if ($num_rows < $limit)
             {
-                $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', 'password', '$mda' )";
+                $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', 1, 'password', '$mda' )";
                 $insert = $this->db->query($sql);
                 $new_id = $this->db->insert_id();
-                //$this->rc->output->command('display_message', $this->gettext('successfullysaved') , 'confirmation');
                 rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
-		            'message' => 'done',
+		            'result' => 'done',
 		            'id' => $new_id,
 		            'title' => $server.": ".$user
 		        ));
             }
             else
             {
-                $this->rc->output->command('display_message', 'Error: ' . $this->gettext('fetchmaillimitreached') , 'error');
+                $this->rc->output->command('display_result', 'Error: ' . $this->gettext('fetchmaillimitreached') , 'error');
             }
         }
         else
@@ -161,7 +170,7 @@ class fetchmail extends rcube_plugin
             $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
             $update = $this->db->query($sql);
             rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
-	            'message' => 'done',
+	            'result' => 'done',
 	            'id' => $id,
 	            'title' => $server.": ".$user
 	        ));
@@ -203,7 +212,7 @@ class fetchmail extends rcube_plugin
             }
         }
         $newentry = 0;
-        $out .= '<form name="fetchmailform">'."\n";
+        $out .= '<form id="fetchmailform" class="needs-validation" novalidate>'."\n";
         $out .= '<fieldset class="my-2"><legend>' . $this->gettext('fetchmail_to') . ' ' . $mailbox . '</legend>' . "\n";
 
         $table = new html_table(['cols' => 2, 'class' => 'propform cols-sm-6-6']);
@@ -234,7 +243,8 @@ class fetchmail extends rcube_plugin
             'name' => '_fetchmailserver',
             'id' => $field_id,
             'maxlength' => 320,
-            'size' => 40
+            'size' => 40,
+            'required' => 'required'
         ));
         $table->add('title', rcube_utils::rep_specialchars_output($this->gettext('fetchmailserver')));
         $table->add(null, $input_fetchmailserver->show($server));
@@ -244,7 +254,8 @@ class fetchmail extends rcube_plugin
             'name' => '_fetchmailuser',
             'id' => $field_id,
             'maxlength' => 320,
-            'size' => 40
+            'size' => 40,
+            'required' => 'required'
         ));
         $table->add('title', rcube_utils::rep_specialchars_output($this->gettext('username')));
         $table->add(null, $input_fetchmailuser->show($user));
@@ -255,7 +266,8 @@ class fetchmail extends rcube_plugin
             'id' => $field_id,
             'maxlength' => 320,
             'size' => 40,
-            'autocomplete' => 'off'
+            'autocomplete' => 'off',
+            'required' => 'required'
         ));
         $table->add('title', rcube_utils::rep_specialchars_output($this->gettext('password')));
         $table->add(null, $input_fetchmailpass->show($pass));
@@ -365,7 +377,7 @@ class fetchmail extends rcube_plugin
     
     public function section_list($attrib)
     {
-    	// add id to message list table if not specified
+    	// add id to result list table if not specified
         if (!strlen($attrib['id'])) {
             $attrib['id'] = 'rcmsectionslist';
         }
@@ -419,8 +431,24 @@ class fetchmail extends rcube_plugin
         // check DB connections and exit on failure
         if ($err_str = $this->db->is_error())
         {
-            rcube::raise_error(['code' => 603, 'type' => 'db', 'message' => $err_str], false, true);
+            rcube::raise_error(['code' => 603, 'type' => 'db', 'result' => $err_str], false, true);
         }
+    }
+    
+    private function _check_server($server)
+    {
+    	if(!is_string($server))
+    	{
+    		return false;
+    	}
+    	
+    	$result = dns_get_record($server, DNS_A+DNS_AAAA);
+    	if(is_array($result))
+    	{
+    		return (sizeof($result) > 0);
+    	}
+    	
+    	return false;
     }
 }
 

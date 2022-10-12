@@ -26,3 +26,4 @@ $messages['successfullydisabled'] = 'Успешно отключено!';
 $messages['successfullyenabled'] = 'Успешно включено!';
 $messages['successfullysaved'] = 'Успешно сохранено!';
 $messages['textempty'] = 'Не заполнены обязательные поля';
+$messages['invaliddomain'] = 'Некорректный домен $s, и/или не обнаруживается в DNS';

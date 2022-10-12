@@ -54,24 +54,20 @@ if (window.rcmail) {
 		}
 		if(rcmail.env.action == 'plugin.fetchmail.edit') {
 			rcmail.register_command('fetchmail.save', function() {
-				fields = ['fetchmailserver', 'fetchmailuser', 'fetchmailpass'];
-				for(i=0;i<fields.length;i++) {
-					var elem = document.getElementById(fields[i]);
-					elem.value.length ? elem.classList.remove('is-invalid') : elem.classList.add('is-invalid');
-				}
-				if(document.getElementsByClassName('is-invalid').length > 0) {
-				    rcmail.display_message(rcmail.gettext('textempty','fetchmail'), 'error');
-				} else {
-		            var settings = $('form[name*="fetchmailform"]').serialize();
+				var form = document.getElementById('fetchmailform');
+				$('#fetchmailform .invalid-feedback').remove();
+				if(form.checkValidity()) {
+		            var settings = $('#fetchmailform').serialize();
 					lock = rcmail.set_busy(true, 'loading');
 		            rcmail.http_post('plugin.fetchmail.save', settings, lock);
-		        }
+				}
+				form.classList.add('was-validated');
 			});
 			rcmail.enable_command('fetchmail.save', true);
 		}
 	});
 	rcmail.addEventListener('plugin.fetchmail.save.callback', function(e) {
-		if(e.message == "done") {
+		if(e.result == "done") {
 			var rowid = "rcmrow"+e.id;
 			if(parent.window.document.getElementById(rowid)) {
 				parent.window.document.getElementById(rowid).getElementsByTagName('td')[0].innerText = e.title;
@@ -88,10 +84,20 @@ if (window.rcmail) {
 		    parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = parent.window.rcmail.sections_list.rowcount+"/"+parent.window.rcmail.env.fetchmail_limit;
 			parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('value')[0].setAttribute("style","width:"+((parent.window.rcmail.sections_list.rowcount/parent.window.rcmail.env.fetchmail_limit)*100)+"%");
 
+		} else if (e.result == "dnserror") {
+			/* Override Client-Side Validation to display the DNS error properly, see https://github.com/twbs/bootstrap/issues/32733 */
+			$('#fetchmailform').removeClass('was-validated');
+			$('#fetchmailform input').addClass('is-valid');
+			$('#fetchmailform select').addClass('is-valid');
+			$('#fetchmailserver').removeClass('is-valid').addClass('is-invalid');
+			const fb = document.createElement("div")
+			fb.classList.add("invalid-feedback");
+			fb.innerText = e.message;
+			document.getElementById('fetchmailserver').parentNode.appendChild(fb);
 		}
 	});
 	rcmail.addEventListener('plugin.fetchmail.delete.callback', function(e) {
-		if(e.message == "done") {
+		if(e.result == "done") {
 			rcmail.sections_list.remove_row(e.id);
 			if ((win = rcmail.get_frame_window(rcmail.env.contentframe))) {
 				win.location.href = rcmail.env.blankpage;
