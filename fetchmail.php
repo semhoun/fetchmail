@@ -162,7 +162,7 @@ class fetchmail extends rcube_plugin
             }
             else
             {
-                $this->rc->output->command('display_result', 'Error: ' . $this->gettext('fetchmaillimitreached') , 'error');
+                $this->rc->output->command('display_message', 'Error: ' . $this->gettext('fetchmaillimitreached') , 'error');
             }
         }
         else
@@ -431,7 +431,7 @@ class fetchmail extends rcube_plugin
         // check DB connections and exit on failure
         if ($err_str = $this->db->is_error())
         {
-            rcube::raise_error(['code' => 603, 'type' => 'db', 'result' => $err_str], false, true);
+            rcube::raise_error(['code' => 603, 'type' => 'db', 'message' => $err_str], false, true);
         }
     }
     
