@@ -55,10 +55,11 @@ Please note that some commands might require superuser permissions
 
 ## Settings
 In case you need to edit default-set settings, you may copy `config.inc.php.dist` to `config.inc.php` and edit setings as desired in the latter file, which will override defaults.
-* `$rcmail_config ['fetchmail_db_dsnr']` allows you to use a fetchmail database outside the roundcube database, e.g. from an existing Postfix Admin installation. see [Roundcube configuration options](https://github.com/roundcube/roundcubemail/wiki/Configuration#database-connection) for correct syntax. Default is `$config['db_dsnw']`
-* `$rcmail_config ['fetchmail_limit']` limits the number of external mailboxes per user allowed. Default is `10`.
-* `$rcmail_config ['fetchmail_folder']` whether to allow users to specify IMAP folder they wish to download mail from. Default is `false`.
-* `$rcmail_config ['fetchmail_mda']` allows you to specify mda field for fetchmail. This could be useful in case you want to deliver downloaded mail via MDA or LDA directly, rather than forwarding via SMTP or LMTP. For more information please refer to [fetchmail manual](http://www.fetchmail.info/fetchmail-man.html) and [fetchmail.pl](https://github.com/postfixadmin/postfixadmin/blob/master/ADDITIONS/fetchmail.pl) script. Default is `''`, i.e. not used.
+* `$config['fetchmail_db_dsn']` allows you to use a fetchmail database outside the Roundcube database, e.g. from an existing Postfix Admin installation. see [Roundcube configuration options](https://github.com/roundcube/roundcubemail/wiki/Configuration#database-connection) for correct syntax. If set to `null`, Roundcube Database is used. Default is `null`.
+* `$config['fetchmail_limit']` limits the number of external mailboxes per user allowed. Default is `10`.
+* `$config['fetchmail_folder']` whether to allow users to specify IMAP folder they wish to download mail from. Default is `false`.
+* `$config['fetchmail_mda']` allows you to specify mda field for fetchmail. This could be useful in case you want to deliver downloaded mail via MDA or LDA directly, rather than forwarding via SMTP or LMTP. For more information please refer to [fetchmail manual](http://www.fetchmail.info/fetchmail-man.html) and [fetchmail.pl](https://github.com/postfixadmin/postfixadmin/blob/master/ADDITIONS/fetchmail.pl) script. Default is `''`, i.e. not used.
+* `$config['fetchmail_check_server']` if set to `true` the plugin will do a DNS lookup for the servername provided by the user. If the servername cannot be resolved in DNS, an error is displayed.
 
 ## License
 This software distributed under the terms of the GNU General Public License as published by the Free Software Foundation

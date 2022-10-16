@@ -153,12 +153,20 @@ class fetchmail extends rcube_plugin
             {
                 $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', 1, 'password', '$mda' )";
                 $insert = $this->db->query($sql);
-                $new_id = $this->db->insert_id();
-                rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
-		            'result' => 'done',
-		            'id' => $new_id,
-		            'title' => $server.": ".$user
-		        ));
+                if ($err_str = $this->db->is_error())
+				{
+					rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
+						'result' => 'dberror',
+						'message' => $this->gettext(['name' => 'servererrormsg', 'vars' => ['msg' => $err_str]])
+					));
+				} else {
+		            $new_id = $this->db->insert_id();
+		            rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
+				        'result' => 'done',
+				        'id' => $new_id,
+				        'title' => $server.": ".$user
+				    ));
+				}
             }
             else
             {
@@ -169,11 +177,19 @@ class fetchmail extends rcube_plugin
         {
             $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
             $update = $this->db->query($sql);
-            rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
-	            'result' => 'done',
-	            'id' => $id,
-	            'title' => $server.": ".$user
-	        ));
+            if ($err_str = $this->db->is_error())
+			{
+				rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
+					'result' => 'dberror',
+					'message' => $this->gettext(['name' => 'servererrormsg', 'vars' => ['msg' => $err_str]])
+				));
+			} else {
+		        rcmail::get_instance()->output->command('plugin.fetchmail.save.callback', array(
+			        'result' => 'done',
+			        'id' => $id,
+			        'title' => $server.": ".$user
+			    ));
+		    }
         }
     }
     
@@ -421,9 +437,14 @@ class fetchmail extends rcube_plugin
 
     private function _db_connect($mode)
     {
+    	$db_dsn = $this->rc->config->get('fetchmail_db_dsn');
+    	if(!$db_dsn) {
+    	    $this->db = $this->rc->db;
+    	}
+    	
         if (!$this->db)
         {
-            $this->db = rcube_db::factory($this->rc->config->get('fetchmail_db_dsnr') , '', false);
+            $this->db = rcube_db::factory($db_dsn, '', false);
         }
 
         $this->db->db_connect($mode);
@@ -437,6 +458,10 @@ class fetchmail extends rcube_plugin
     
     private function _check_server($server)
     {
+    	if($this->rc->config->get('fetchmail_check_server') == false) {
+            return true;
+    	}
+    	
     	if(!is_string($server))
     	{
     		return false;

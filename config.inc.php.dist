@@ -7,15 +7,17 @@
 // database connection string (DSN) for for a fetchmail table
 // outside the Roundcube Database, e.g. an existing Postfix Admin Database.
 // For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
-$config['fetchmail_db_dsnr'] = $config['db_dsnw'];
+$config['fetchmail_db_dsn'] = null;
 
 // max external accounts to fetch per mailbox
-$rcmail_config ['fetchmail_limit'] = 10;
+$config['fetchmail_limit'] = 10;
 
 // allow remote folder setting
-$rcmail_config ['fetchmail_folder'] = false;
+$config['fetchmail_folder'] = false;
 
 // mda for fetchmail
-$rcmail_config ['fetchmail_mda'] = '';
+$config['fetchmail_mda'] = '';
 
+// Check if servername provided by the user is valid by doing a DNS lookup
+$config['fetchmail_check_server'] = false;
 ?>

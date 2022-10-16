@@ -94,6 +94,8 @@ if (window.rcmail) {
 			fb.classList.add("invalid-feedback");
 			fb.innerText = e.message;
 			document.getElementById('fetchmailserver').parentNode.appendChild(fb);
+		} else if (e.result == "dberror") {
+			rcmail.display_message(e.message, 'error');
 		}
 	});
 	rcmail.addEventListener('plugin.fetchmail.delete.callback', function(e) {
@@ -107,6 +109,8 @@ if (window.rcmail) {
 			rcmail.enable_command('fetchmail.delete', false);
 			document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = rcmail.sections_list.rowcount+"/"+rcmail.env.fetchmail_limit;
 			document.getElementById('fetchmail-quota').getElementsByClassName('value')[0].setAttribute("style","width:"+((rcmail.sections_list.rowcount/rcmail.env.fetchmail_limit)*100)+"%");
+		} else if (e.result == "dberror") {
+			rcmail.display_message(e.message, 'error');
 		}
 	});
 
