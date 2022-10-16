@@ -151,7 +151,7 @@ class fetchmail extends rcube_plugin
             $num_rows = $this->db->num_rows($result);
             if ($num_rows < $limit)
             {
-                $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', 1, 'password', '$mda' )";
+                $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password', '$mda' )";
                 $insert = $this->db->query($sql);
                 if ($err_str = $this->db->is_error())
 				{
