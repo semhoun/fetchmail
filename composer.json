@@ -8,7 +8,7 @@
 		"mailbox"
 	],
 	"homepage" : "http://pf4public.github.io/fetchmail/",
-	"license" : "GPL",
+	"license" : "GPL-2.0-only",
 	"authors" : [{
 			"name" : "Arthur Mayer",
 			"role" : "Retired developer",
