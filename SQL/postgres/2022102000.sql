@@ -1,0 +1,1 @@
+ALTER TABLE fetchmail ADD "sslcertck" boolean NULL DEFAULT true;
