@@ -175,7 +175,12 @@ class fetchmail extends rcube_plugin
         }
         else
         {
+        	if($mda != '')
+            {
             $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
+            } else {
+            $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password' WHERE id = '$id'";
+            }
             $update = $this->db->query($sql);
             if ($err_str = $this->db->is_error())
 			{
