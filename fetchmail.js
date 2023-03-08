@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Fetchmail Roundcube Plugin (Roundcube version 1.0-beta and above)
- * This software distributed under the terms of the GNU General Public License 
+ * This software distributed under the terms of the GNU General Public License
  * as published by the Free Software Foundation
  * Further details on the GPL license can be found at
  * http://www.gnu.org/licenses/gpl.html
- * By contributing authors release their contributed work under this license 
+ * By contributing authors release their contributed work under this license
  * For more information see README.md file
  ******************************************************************************/
 function fetchmail_toggle_folder() {
    switch ($('#fetchmailprotocol').val()) {
-       case "IMAP":
-           $("#fetchmail_folder_display").show();
-           break;
-       default:
-	       $("#fetchmail_folder_display").hide();
+	   case "IMAP":
+		   $("#fetchmail_folder_display").show();
+		   break;
+	   default:
+		   $("#fetchmail_folder_display").hide();
    }
 }
 
@@ -22,13 +22,13 @@ if (window.rcmail) {
 		if (rcmail.env.action == 'plugin.fetchmail') {
 			rcmail.section_select = function(list) {
 				var win, id = list.get_single_selection();
-	
+
 				if (id && (win = this.get_frame_window(this.env.contentframe))) {
 					this.location_href({_action: 'plugin.fetchmail.edit', _id: id, _framed: 1}, win, true);
 				}
 				this.enable_command('fetchmail.delete', true);
 			}
-		    
+
 			rcmail.register_command('fetchmail.delete', function() {
 				var id = rcmail.sections_list.get_single_selection();
 				rcmail.confirm_dialog(rcmail.get_label('fetchmail.fetchmaildelconfirm'), 'delete', function(e, ref) {
@@ -44,12 +44,12 @@ if (window.rcmail) {
 				}
 				rcmail.enable_command('fetchmail.delete', false);
 			}, true);
-			
+
 			if(rcmail.sections_list.rowcount < rcmail.env.fetchmail_limit) {
-		    	rcmail.enable_command('fetchmail.add', true);
-		    } else {
-		    	rcmail.enable_command('fetchmail.add', false);
-		    }
+				rcmail.enable_command('fetchmail.add', true);
+			} else {
+				rcmail.enable_command('fetchmail.add', false);
+			}
 
 		}
 		if(rcmail.env.action == 'plugin.fetchmail.edit') {
@@ -57,9 +57,9 @@ if (window.rcmail) {
 				var form = document.getElementById('fetchmailform');
 				$('#fetchmailform .invalid-feedback').remove();
 				if(form.checkValidity()) {
-		            var settings = $('#fetchmailform').serialize();
+					var settings = $('#fetchmailform').serialize();
 					lock = rcmail.set_busy(true, 'loading');
-		            rcmail.http_post('plugin.fetchmail.save', settings, lock);
+					rcmail.http_post('plugin.fetchmail.save', settings, lock);
 				}
 				form.classList.add('was-validated');
 			});
@@ -73,15 +73,15 @@ if (window.rcmail) {
 				parent.window.document.getElementById(rowid).getElementsByTagName('td')[0].innerText = e.title;
 			} else {
 				parent.window.rcmail.sections_list.insert_row({id:rowid,uid:e.id,className:"fetchmail-account",cols:[{className:"section",innerHTML:e.title}]});
-		        parent.window.rcmail.sections_list.select_row(e.id);
+				parent.window.rcmail.sections_list.select_row(e.id);
 			}
-		    rcmail.display_message(rcmail.gettext('successfullysaved','fetchmail'), 'confirmation');
-		    if(parent.window.rcmail.sections_list.rowcount < parent.window.rcmail.env.fetchmail_limit) {
-		    	parent.window.rcmail.enable_command('fetchmail.add', true);
-		    } else {
-		    	parent.window.rcmail.enable_command('fetchmail.add', false);
-		    }
-		    parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = parent.window.rcmail.sections_list.rowcount+"/"+parent.window.rcmail.env.fetchmail_limit;
+			rcmail.display_message(rcmail.gettext('successfullysaved','fetchmail'), 'confirmation');
+			if(parent.window.rcmail.sections_list.rowcount < parent.window.rcmail.env.fetchmail_limit) {
+				parent.window.rcmail.enable_command('fetchmail.add', true);
+			} else {
+				parent.window.rcmail.enable_command('fetchmail.add', false);
+			}
+			parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('count')[0].innerText = parent.window.rcmail.sections_list.rowcount+"/"+parent.window.rcmail.env.fetchmail_limit;
 			parent.window.document.getElementById('fetchmail-quota').getElementsByClassName('value')[0].setAttribute("style","width:"+((parent.window.rcmail.sections_list.rowcount/parent.window.rcmail.env.fetchmail_limit)*100)+"%");
 
 		} else if (e.result == "dnserror") {
@@ -115,5 +115,3 @@ if (window.rcmail) {
 	});
 
 }
-
-

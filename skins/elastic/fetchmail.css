@@ -7,5 +7,5 @@
 }
 
 .action-plugin-fetchmail .listing.iconized tr td.section::before {
-    content: "\f01c";
+	content: "\f01c";
 }
