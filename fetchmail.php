@@ -32,12 +32,12 @@ class fetchmail extends rcube_plugin
         $this->register_action('plugin.fetchmail.save', [$this, 'save']);
         $this->register_action('plugin.fetchmail.delete', [$this, 'delete']);
     }
-    
+
     public function init_html()
     {
         $this->rc->output->set_pagetitle($this->gettext('fetchmail'));
         $this->include_script('fetchmail.js');
-        
+
         if ($this->rc->action == 'plugin.fetchmail.edit') {
         	$this->rc->output->add_handler('fetchmailform', [$this, 'gen_form']);
             $this->rc->output->send('fetchmail.fetchmailedit');
@@ -47,7 +47,7 @@ class fetchmail extends rcube_plugin
             $this->rc->output->send('fetchmail.fetchmail');
         }
     }
-        
+
     public function delete()
     {
         $this->_db_connect('w');
@@ -63,7 +63,7 @@ class fetchmail extends rcube_plugin
 		    ));
         }
     }
-    
+
     public function quota($attrib)
     {
         $this->_db_connect('w');
@@ -74,12 +74,12 @@ class fetchmail extends rcube_plugin
         $num_rows = $this->db->num_rows($result);
         $percent = ($num_rows / $limit) * 100;
         $out = "<div id=\"".$attrib['id']."\" class=\"quota-widget\"><span class=\"count\">".$num_rows."/".$limit."</span><span class=\"bar\"><span class=\"value\" style=\"width:$percent%\"></span></span></div>";
-        
+
         $this->rc->output->add_gui_object('fetchmail.quota', $attrib['id']);
         $this->rc->output->set_env('fetchmail_limit', $limit);
         return $out;
     }
-    
+
     public function save()
     {
         $this->_db_connect('w');
@@ -133,7 +133,7 @@ class fetchmail extends rcube_plugin
             $fetchall = 1;
         }
         $mda = $this->rc->config->get('fetchmail_mda');
-        
+
         //Validate server
         $server_valid = $this->_check_server($server);
         if(!$server_valid) {
@@ -151,7 +151,12 @@ class fetchmail extends rcube_plugin
             $num_rows = $this->db->num_rows($result);
             if ($num_rows < $limit)
             {
-                $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password', '$mda' )";
+                if($mda != '')
+                {
+                    $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password', '$mda' )";
+                } else {
+                    $sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password')";
+                }
                 $insert = $this->db->query($sql);
                 if ($err_str = $this->db->is_error())
 				{
@@ -177,9 +182,9 @@ class fetchmail extends rcube_plugin
         {
         	if($mda != '')
             {
-            $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
+                $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
             } else {
-            $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password' WHERE id = '$id'";
+                $sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password' WHERE id = '$id'";
             }
             $update = $this->db->query($sql);
             if ($err_str = $this->db->is_error())
@@ -197,7 +202,7 @@ class fetchmail extends rcube_plugin
 		    }
         }
     }
-    
+
     public function gen_form($attrib)
     {
         $this->_db_connect('r');
@@ -395,20 +400,20 @@ class fetchmail extends rcube_plugin
         $this->rc->output->add_gui_object('fetchmailform', 'fetchmail-form');
         return $out;
     }
-    
+
     public function section_list($attrib)
     {
     	// add id to result list table if not specified
         if (!strlen($attrib['id'])) {
             $attrib['id'] = 'rcmsectionslist';
         }
-        
+
         //Fetch existing entries from Database
     	$this->_db_connect('r');
         $mailbox = $this->rc->user->data['username'];
         $sql = "SELECT id, CONCAT(src_server, ': ', src_user) as title FROM fetchmail WHERE mailbox='$mailbox'";
         $result = $this->db->query($sql);
-        
+
         $accounts = $result->fetchAll();
         $sections = array();
         foreach($accounts as $account) {
@@ -418,17 +423,17 @@ class fetchmail extends rcube_plugin
                 'section' => $account['title']
             );
         }
-        
+
         // create HTML table
         $out = $this->rc->table_output($attrib, $sections, array('section'), 'id');
 
         // set client env
         $this->rc->output->add_gui_object('sectionslist', $attrib['id']);
         $this->rc->output->include_script('list.js');
-        
+
         return $out;
     }
-    
+
     public function settings_actions($args)
     {
         $args['actions'][] = array(
@@ -446,7 +451,7 @@ class fetchmail extends rcube_plugin
     	if(!$db_dsn) {
     	    $this->db = $this->rc->db;
     	}
-    	
+
         if (!$this->db)
         {
             $this->db = rcube_db::factory($db_dsn, '', false);
@@ -460,26 +465,24 @@ class fetchmail extends rcube_plugin
             rcube::raise_error(['code' => 603, 'type' => 'db', 'message' => $err_str], false, true);
         }
     }
-    
+
     private function _check_server($server)
     {
     	if($this->rc->config->get('fetchmail_check_server') == false) {
             return true;
     	}
-    	
+
     	if(!is_string($server))
     	{
     		return false;
     	}
-    	
+
     	$result = dns_get_record($server, DNS_A+DNS_AAAA);
     	if(is_array($result))
     	{
     		return (sizeof($result) > 0);
     	}
-    	
+
     	return false;
     }
 }
-
-
