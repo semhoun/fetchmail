@@ -10,6 +10,7 @@ $labels['fetchmailkeep'] = 'Do not remove messages from the server';
 $labels['fetchmailpollinterval'] = 'Poll interval for the mailbox';
 $labels['fetchmailprotocol'] = 'Protocol';
 $labels['fetchmailserver'] = 'Server hostname';
+$labels['fetchmailport'] = 'Server port';
 $labels['fetchmailusessl'] = 'Use SSL';
 $labels['fetchmail_entries'] = 'Accounts to collect from';
 $labels['fetchmail_to'] = 'Collect mail to';

@@ -10,6 +10,7 @@ $labels['fetchmailkeep'] = 'Ne pas supprimer les messages sur le serveur';
 $labels['fetchmailpollinterval'] = 'Intervalle d\'interrogation de la boite email';
 $labels['fetchmailprotocol'] = 'Protocole';
 $labels['fetchmailserver'] = 'Nom d\'hôte du serveur';
+$labels['fetchmailport'] = 'Port du serveur';
 $labels['fetchmailusessl'] = 'Utiliser SSL';
 $labels['fetchmail_entries'] = 'Comptes à récupérer depuis';
 $labels['fetchmail_to'] = 'Récupérer les emails dans le compte de';

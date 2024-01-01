@@ -91,6 +91,7 @@ class fetchmail extends rcube_plugin
 		$protocol = rcube_utils::get_input_value('_fetchmailprotocol', rcube_utils::INPUT_POST);
 		$protocol = strtoupper($protocol); // TODO: temporary
 		$server = rcube_utils::get_input_value('_fetchmailserver', rcube_utils::INPUT_POST);
+		$port = rcube_utils::get_input_value('_fetchmailport', rcube_utils::INPUT_POST);
 		$user = rcube_utils::get_input_value('_fetchmailuser', rcube_utils::INPUT_POST);
 		$pass = base64_encode(rcube_utils::get_input_value('_fetchmailpass', rcube_utils::INPUT_POST));
 		$folder = rcube_utils::get_input_value('_fetchmailfolder', rcube_utils::INPUT_POST);
@@ -153,9 +154,9 @@ class fetchmail extends rcube_plugin
 			{
 				if($mda != '')
 				{
-					$sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password', '$mda' )";
+					$sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_port, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth, mda) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$port', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password', '$mda' )";
 				} else {
-					$sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password')";
+					$sql = "INSERT INTO fetchmail (mailbox, domain, active, src_server, src_port, src_user, src_password, src_folder, poll_time, fetchall, keep, protocol, usessl, sslcertck, src_auth) VALUES ('$mailbox', '$mailbox_domain', '$enabled', '$server', '$port', '$user', '$pass', '$folder', '$pollinterval', '$fetchall', '$keep', '$protocol', '$usessl', true, 'password')";
 				}
 				$insert = $this->db->query($sql);
 				if ($err_str = $this->db->is_error())
@@ -182,9 +183,9 @@ class fetchmail extends rcube_plugin
 		{
 			if($mda != '')
 			{
-				$sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
+				$sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_port = '$port', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password', mda = '$mda' WHERE id = '$id'";
 			} else {
-				$sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password' WHERE id = '$id'";
+				$sql = "UPDATE fetchmail SET mailbox = '$mailbox', domain = '$mailbox_domain', active = '$enabled', keep = '$keep', protocol = '$protocol', src_server = '$server', src_port = '$port', src_user = '$user', src_password = '$pass', src_folder = '$folder', poll_time = '$pollinterval', fetchall = '$fetchall', usessl = '$usessl', src_auth = 'password' WHERE id = '$id'";
 			}
 			$update = $this->db->query($sql);
 			if ($err_str = $this->db->is_error())
@@ -229,6 +230,7 @@ class fetchmail extends rcube_plugin
 				$mailget_id = $row['id'];
 				$protocol = $row['protocol'];
 				$server = $row['src_server'];
+				$port = $row['src_port'];
 				$user = $row['src_user'];
 				$pass = base64_decode($row['src_password']);
 				$folder = $row['src_folder'];
@@ -274,6 +276,17 @@ class fetchmail extends rcube_plugin
 		));
 		$table->add('title', rcube_utils::rep_specialchars_output($this->gettext('fetchmailserver')));
 		$table->add(null, $input_fetchmailserver->show($server));
+		
+		$field_id = 'fetchmailport';
+		$input_fetchmailport = new html_inputfield(array(
+			'name' => '_fetchmailport',
+			'id' => $field_id,
+			'maxlength' => 6,
+			'size' => 6,
+			'required' => 'required'
+		));
+		$table->add('title', rcube_utils::rep_specialchars_output($this->gettext('fetchmailport')));
+		$table->add(null, $input_fetchmailport->show($port));
 
 		$field_id = 'fetchmailuser';
 		$input_fetchmailuser = new html_inputfield(array(
