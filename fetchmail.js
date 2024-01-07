@@ -7,15 +7,49 @@
  * By contributing authors release their contributed work under this license
  * For more information see README.md file
  ******************************************************************************/
-function fetchmail_toggle_folder() {
+function fetchmail_on_change_protocol() {
    switch ($('#fetchmailprotocol').val()) {
 	   case "IMAP":
-		   $("#fetchmail_folder_display").show();
+		   $("#fetchmailport").show();
 		   break;
 	   default:
 		   $("#fetchmail_folder_display").hide();
    }
+   
+   switch ($('#fetchmailprotocol').val()) {
+	   case "IMAP":
+		   if ($("#fetchmailport").val() == 995 && $("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(993)
+		   } else if ($("#fetchmailport").val() == 110 && !$("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(143)
+		   }
+		   break;
+	   default:
+		   if ($("#fetchmailport").val() == 993 && $("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(995)
+		   } else if ($("#fetchmailport").val() == 143 && !$("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(110)
+		   }
+   }
 }
+function fetchmail_on_change_ssl() {
+   switch ($('#fetchmailprotocol').val()) {
+	   case "IMAP":
+		   if ($("#fetchmailport").val() == 143 && $("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(993)
+		   } else if ($("#fetchmailport").val() == 993 && !$("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(143)
+		   }
+		   break;
+	   default:
+		   if ($("#fetchmailport").val() == 110 && $("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(995)
+		   } else if ($("#fetchmailport").val() == 995 && !$("#fetchmailusessl").prop('checked')) {
+			   $("#fetchmailport").val(110)
+		   }
+   }
+}
+
 
 if (window.rcmail) {
 	rcmail.addEventListener('init', function (evt) {

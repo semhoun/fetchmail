@@ -254,7 +254,7 @@ class fetchmail extends rcube_plugin
 		$input_fetchmailprotocol = new html_select(array(
 			'name' => '_fetchmailprotocol',
 			'id' => $field_id,
-			'onchange' => 'fetchmail_toggle_folder();'
+			'onchange' => 'fetchmail_on_change_protocol();'
 		));
 		$input_fetchmailprotocol->add(array(
 			'IMAP',
@@ -283,7 +283,8 @@ class fetchmail extends rcube_plugin
 			'id' => $field_id,
 			'maxlength' => 6,
 			'size' => 6,
-			'required' => 'required'
+			'required' => 'required',
+			'value' => 993,
 		));
 		$table->add('title', rcube_utils::rep_specialchars_output($this->gettext('fetchmailport')));
 		$table->add(null, $input_fetchmailport->show($port));
@@ -381,7 +382,8 @@ class fetchmail extends rcube_plugin
 		$input_fetchmailusessl = new html_checkbox(array(
 			'name' => '_fetchmailusessl',
 			'id' => $field_id,
-			'value' => '1'
+			'value' => '1',
+			'onchange' => 'fetchmail_on_change_ssl();',
 		));
 		$table->add('title', rcube_utils::rep_specialchars_output($this->gettext('fetchmailusessl')));
 		$table->add(null, $input_fetchmailusessl->show($usessl));
