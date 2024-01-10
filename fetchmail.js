@@ -10,7 +10,7 @@
 function fetchmail_on_change_protocol() {
    switch ($('#fetchmailprotocol').val()) {
 	   case "IMAP":
-		   $("#fetchmailport").show();
+		   $("#fetchmail_folder_display").show();
 		   break;
 	   default:
 		   $("#fetchmail_folder_display").hide();
